@@ -45,4 +45,29 @@ class ListingController extends Controller{
 
     return redirect("/")->with("message", "Successfully created listing");
   }
+
+  function edit(Listing $listing) {
+
+    return view('listings.edit', ["listing" => $listing]);
+  }
+
+  function update(Request $request, Listing $listing) {
+    $validated = $request->validate([
+      "company" => "required",
+      "title" => "required",
+      "location" => "required",
+      "email" => "required|email",
+      "website" => "required",
+      "tags" => "required", 
+      "description" => "required"
+    ]);
+
+    if ($request->hasFile("logo")) {
+      $validated["logo"] = $request->file("logo")->store("logos", "public");
+    }
+
+    $listing->update($validated);
+
+    return back()->with("message", "Successfully edited listing");
+  }
 }
