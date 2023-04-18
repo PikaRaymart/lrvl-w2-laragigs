@@ -20,7 +20,7 @@ class UserController extends Controller{
       "password" => "required|confirmed|min:6",
     ]);
 
-    $validated["pasword"] = bcrypt($validated["password"]);
+    $validated["password"] = bcrypt($validated["password"]);
 
     $user = User::create($validated);
 
@@ -35,5 +35,25 @@ class UserController extends Controller{
     $request->session()->regenerateToken();
 
     return redirect("/")->with("message", "Successfully logout");
+  }
+
+  function login() {
+
+    return view("users.login");
+  }
+
+  function authenticate(Request $request) {
+    $validated = $request->validate([
+      "email" => "required|email",
+      "password" => "required"
+    ]);
+
+    if(auth()->attempt($validated)) {
+      $request->session()->regenerate();
+
+      return redirect("/")->with("message", "Successfully logged in");
+    }
+
+    return back()->withErrors(["email" => "Invalid credentials"])->onlyInput("email");
   }
 }
