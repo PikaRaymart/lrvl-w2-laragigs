@@ -20,6 +20,9 @@ Route::get("/", [ListingController::class, "index"]);
 // Show the create form for creating a gib
 Route::get("/listings/create", [ListingController::class, "create"])->middleware("auth");
 
+// Manage listings
+Route::get("/listings/manage", [ListingController::class, "manage"])->middleware("auth");
+
 // Show a single listing or gig
 Route::get("/listings/{listing}", [ListingController::class, "show"]);
 
