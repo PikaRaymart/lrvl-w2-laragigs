@@ -7,11 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class ListingController extends Controller{
-	function index() {
+	
+  function index() {
     
     return view("listings.index", ["listings" => Listing::latest()
-    ->filter(request(["tag", "search"]))
-    ->get()]);
+      ->filter(request(["tag", "search"]))
+      ->paginate(6)
+    ]);
   }
 
   function show(Listing $listing) {
@@ -34,6 +36,10 @@ class ListingController extends Controller{
       "tags" => "required", 
       "description" => "required"
     ]);
+
+    if ($request->hasFile("logo")) {
+      $validated["logo"] = $request->file("logo")->store("logos", "public");
+    }
 
     Listing::create($validated);
 
