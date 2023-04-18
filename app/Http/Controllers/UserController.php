@@ -28,4 +28,12 @@ class UserController extends Controller{
 
     return redirect("/")->with("message", "Account registered and logged in");
   }
+
+  function logout(Request $request) {
+    auth()->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect("/")->with("message", "Successfully logout");
+  }
 }
