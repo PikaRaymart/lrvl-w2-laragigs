@@ -8,7 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Listing extends Model{
 	use HasFactory;
 
-	protected $fillable = ["title", "company", "location", "website", "email", "tags", "description", "logo"];
+	protected $fillable = [
+		"title", 
+		"company", 
+		"location", 
+		"website", 
+		"email", 
+		"tags", 
+		"description", 
+		"logo",
+		"user_id"
+	];
 
 	function scopeFilter($query, array $filters) {
 		
@@ -21,5 +31,10 @@ class Listing extends Model{
 			->orWhere("description", "like", "%" . request("search") . "%")
 			->orWhere("tags", "like", "%" . request("search") . "%");
 		}
+	}
+
+	function user() {
+
+		return $this->belongsTo(User::class, "user_id");
 	}
 }
